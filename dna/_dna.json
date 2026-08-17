@@ -5,7 +5,7 @@
   "version": 1,
   "role": "dna",
 
-  // The parent DNA. Everything generic lives in dna_base; this layer only
-  // adds its own topic on top.
-  "layers": ["dna_base"]
+  // No parent DNA. This layer is orthogonal: it carries only its own topic
+  // and is combined with dna_base and other layers by the consumer.
+  "layers": []
 }

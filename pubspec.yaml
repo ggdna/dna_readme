@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.13.0 <4.0.0"
 
 dev_dependencies:
-  dna_base: ^0.3.0
   helix: ^0.1.0
   lints: ^6.1.0
   test: ^1.31.2

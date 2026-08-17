@@ -27,9 +27,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@tssuite/dna-base": "^0.3.0"
-  },
   "scripts": {
     "test:dart": "dart test",
     "test": "pnpm run test:dart",

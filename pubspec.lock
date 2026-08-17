@@ -89,14 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
-  dna_base:
-    dependency: "direct dev"
-    description:
-      name: dna_base
-      sha256: f472e88c5c7e175d72f7291664321689c67927191190eb422b2ebba8b76338b5
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   file:
     dependency: transitive
     description:
