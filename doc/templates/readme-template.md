@@ -27,7 +27,7 @@ found in the LICENSE file in the root of this package.
 <!-- Optional, CI Badge -->
 
   ```markdown
-  [![Dart Script Execution](https://github.com/dnaGitOrg/<pkg>/actions/workflows/check.yaml/badge.svg)](...)
+  [![Dart Script Execution](https://github.com/ggsuite/<pkg>/actions/workflows/check.yaml/badge.svg)](...)
   ```
 
 ## Installation

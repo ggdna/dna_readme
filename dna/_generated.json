@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0xaceba91393611806"
+      "hash": "0x0e429085294146c3"
     }
   ],
   "claude": {
@@ -31,7 +31,7 @@
     },
     {
       "path": "doc/templates/readme-template.md",
-      "hash": "0x4a3b05745bc83ba9"
+      "hash": "0x337f489cf7b19984"
     }
   ]
 }
