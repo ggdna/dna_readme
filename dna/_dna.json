@@ -1,0 +1,11 @@
+{
+  // This package is a DNA layer: dna/ is authored by hand and is the last
+  // layer of its own instantiation. "role": "dna" is also what makes this
+  // package usable as a layer at all — a dna/ folder alone does not.
+  "version": 1,
+  "role": "dna",
+
+  // The parent DNA. Everything generic lives in dna_base; this layer only
+  // adds its own topic on top.
+  "layers": ["dna_base"]
+}
