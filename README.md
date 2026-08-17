@@ -14,7 +14,7 @@ The DNA layer that tells a repo how to write its README.
 Declare it as a dev-dependency and initialize once:
 
 ```bash
-pnpm add -D @tssuite/dna-readme   # TypeScript projects
+pnpm add -D @ggdna/dna-readme   # TypeScript projects
 dart pub add dev:dna_readme    # Dart projects
 helix init
 ```
