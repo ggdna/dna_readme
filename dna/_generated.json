@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "layers": [
+    {
+      "name": "base",
+      "package": "helix",
+      "ecosystem": null,
+      "resolvedVersion": "0.1.0",
+      "via": null,
+      "hash": "0x6883da335b415f9d"
+    },
+    {
+      "name": "self",
+      "package": null,
+      "ecosystem": null,
+      "resolvedVersion": null,
+      "via": null,
+      "hash": "0xf4c3b2ac95833a01"
+    }
+  ],
+  "claude": {
+    "claudeMdInclude": null
+  },
+  "baseVersion": "0.1.0",
+  "baseHash": "0x6883da335b415f9d",
+  "hash": null,
+  "instances": [
+    {
+      "path": "doc/en/guides/readme-guide.md",
+      "hash": "0x369c8ff3b6c99a76"
+    },
+    {
+      "path": "doc/templates/readme-template.md",
+      "hash": "0xe64e15db7a324916"
+    }
+  ]
+}
