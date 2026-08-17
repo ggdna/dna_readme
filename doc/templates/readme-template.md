@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright (c) dnaCopyrightHolder
+Copyright (c) ggsuite
 
 Use of this source code is governed by terms that can be
 found in the LICENSE file in the root of this package.
@@ -27,7 +27,7 @@ found in the LICENSE file in the root of this package.
 <!-- Optional, CI Badge -->
 
   ```markdown
-  [![Dart Script Execution](dnaGitOrgUrl/<pkg>/actions/workflows/check.yaml/badge.svg)](...)
+  [![Dart Script Execution](https://github.com/dnaGitOrg/<pkg>/actions/workflows/check.yaml/badge.svg)](...)
   ```
 
 ## Installation
