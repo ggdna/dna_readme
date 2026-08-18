@@ -1,9 +1,7 @@
 {
-  // This package is a DNA layer: dna/ is authored by hand and is the last
-  // layer of its own instantiation. "role": "dna" is also what makes this
-  // package usable as a layer at all — a dna/ folder alone does not.
+  // This package is a DNA layer: dna/ is hand-authored source and is the
+  // last layer of its own instantiation.
   "version": 1,
-  "role": "dna",
 
   // No parent DNA. This layer is orthogonal: it carries only its own topic
   // and is combined with dna_base and other layers by the consumer.

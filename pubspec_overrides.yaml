@@ -1,0 +1,4 @@
+# Ticket-lokale Auflösung: helix ohne role-Flag und ohne String-Platzhalter.
+dependency_overrides:
+  helix:
+    path: ../helix
