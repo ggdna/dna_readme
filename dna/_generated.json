@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x0e429085294146c3"
+      "hash": "0x16b08b308c803fce"
     }
   ],
   "claude": {
@@ -26,12 +26,12 @@
   "hash": null,
   "instances": [
     {
-      "path": "doc/en/guides/readme-guide.md",
+      "path": "doc/guides/readme-guide.md",
       "hash": "0x16b48114a38e395f"
     },
     {
       "path": "doc/templates/readme-template.md",
-      "hash": "0x337f489cf7b19984"
+      "hash": "0xc88ad346e810e0e9"
     }
   ]
 }
