@@ -5,9 +5,9 @@
       "name": "base",
       "package": "helix",
       "ecosystem": null,
-      "resolvedVersion": "0.1.0",
+      "resolvedVersion": "0.2.0",
       "via": null,
-      "hash": "0x6883da335b415f9d"
+      "hash": "0x705e486e88a93125"
     },
     {
       "name": "self",
@@ -21,13 +21,17 @@
   "claude": {
     "claudeMdInclude": null
   },
-  "baseVersion": "0.1.0",
-  "baseHash": "0x6883da335b415f9d",
+  "baseVersion": "0.2.0",
+  "baseHash": "0x705e486e88a93125",
   "hash": null,
   "instances": [
     {
       "path": "doc/guides/readme-guide.md",
       "hash": "0x16b48114a38e395f"
+    },
+    {
+      "path": "doc/hello_world.md",
+      "hash": "0x0903f7fc5224f6f1"
     },
     {
       "path": "doc/templates/readme-template.md",
