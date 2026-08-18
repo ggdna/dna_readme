@@ -38,7 +38,7 @@ Dependency einbinden.>
 ## Documentation
 
 - <Verweise, keine Inhalte: Blog, Architektur-Doku und Guides
-  (`doc/en/guides/`) verlinken>
+  (`doc/guides/`) verlinken>
 
 ## Code Examples
 

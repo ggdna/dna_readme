@@ -4,7 +4,7 @@ The DNA layer that tells a repo how to write its README.
 
 ## Content
 
-- `dna/doc/en/guides/readme-guide.md` — how to write and maintain the
+- `dna/doc/guides/readme-guide.md` — how to write and maintain the
   README
 - `dna/doc/templates/readme-template.md` — the structure every README
   follows
