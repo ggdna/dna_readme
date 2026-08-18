@@ -23,7 +23,6 @@
   },
   "baseVersion": "0.2.0",
   "baseHash": "0x705e486e88a93125",
-  "hash": null,
   "instances": [
     {
       "path": "doc/guides/readme-guide.md",
