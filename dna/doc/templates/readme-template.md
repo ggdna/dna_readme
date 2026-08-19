@@ -8,23 +8,21 @@ found in the LICENSE file in the root of this package.
 
 # <PackageName>
 
-<1–3 Sätze: Was macht dieses Paket, welches Problem löst es?>
+<1–3 sentences: what does this package do, which problem does it solve?>
 
 
-- Ein gefixter Bug verlässt "Open Bugs" im selben Commit, der ihn
-  behebt.
-- `README.md` (en) und `README.de.md` (de) werden in derselben
-  Änderung aktualisiert — siehe
-  [Multi-Language-Guide](./multi-language-guide.md).
+- A fixed bug leaves "Open Bugs" in the same commit that fixes it.
+- `README.md` (en) and `README.de.md` (de) are updated in the same
+  change — see [Multi Language Guide](./multi-language-guide.md).
 
 
 ## Goals
 
-- <3–7 Stichpunkte; jeder Punkt ist ein Ziel, keine Prosa-Aufsätze>
+- <3–7 bullets; each one a goal, not an essay>
 
 ## State
 
-<!-- Optional, CI Badge -->
+<!-- Optional, CI badge -->
 
   ```markdown
   [![Dart Script Execution](dnaGitOrgUrl/<pkg>/actions/workflows/check.yaml/badge.svg)](...)
@@ -32,39 +30,38 @@ found in the LICENSE file in the root of this package.
 
 ## Installation
 
-<Alles, um es ans Laufen zu bringen: installieren, ausführen, als
-Dependency einbinden.>
+<Everything needed to get it running: install, run, add as a
+dependency.>
 
 ## Documentation
 
-- <Verweise, keine Inhalte: Blog, Architektur-Doku und Guides
-  (`doc/guides/`) verlinken>
+- <References, not content: link the blog, the architecture docs and the
+  guides (`doc/guides/`)>
 
 ## Code Examples
 
-<Die wichtigsten Features, nicht alle. Jeder Schnipsel ohne Anpassung
-lauffähig — kein Pseudo-Code, keine TODOs; synchron zu `example/`
-(siehe [Example-Guide](./example-guide.md)).>
+<The most important features, not all of them. Every snippet runs
+unchanged — no pseudo code, no TODOs; kept in sync with `example/`
+(see [Example Guide](./example-guide.md)).>
 
 ```dart
 import 'package:<pkg>/<pkg>.dart';
 
 void main() async {
-  // Minimalbeispiel, das ohne Anpassung lauffähig ist
+  // Minimal example that runs unchanged
 }
 ```
 
 ## How It Works
 
-Optional, für nicht-triviale Mechaniken
+Optional, for non-trivial mechanics
 
 ## Contributing
 
-<Ticket-Workflow, Commit-/Review-Regeln — auf
-[Develop-Guide](./develop-guide.md) und
-[Review-Guide](./for-ai/ai-review-guide.md) verlinken statt sie zu
-wiederholen.>
+<Ticket workflow, commit and review rules — link the
+[Develop Guide](./develop-guide.md) and the
+[Review Guide](./for-ai/ai-review-guide.md) instead of repeating them.>
 
 ## Open Bugs
 
-- <ALLE offenen Bugs, je ein Stichpunkt, idealerweise mit Issue-Link>
+- <ALL open bugs, one bullet each, ideally with an issue link>
