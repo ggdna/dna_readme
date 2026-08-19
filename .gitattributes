@@ -4,3 +4,4 @@ CHANGELOG.md merge=union
 pubspec.lock merge=ours
 pnpm-lock.yaml merge=ours
 dna/_generated.json merge=ours
+package-lock.json merge=ours
