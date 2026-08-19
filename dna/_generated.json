@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x16b08b308c803fce"
+      "hash": "0x871b9829ba389f98"
     }
   ],
   "claude": {
@@ -24,6 +24,10 @@
   "baseVersion": "0.2.0",
   "baseHash": "0x705e486e88a93125",
   "instances": [
+    {
+      "path": ".claude/skills/readme/SKILL.md",
+      "hash": "0x9b2f536398a6bba9"
+    },
     {
       "path": "doc/guides/readme-guide.md",
       "hash": "0x16b48114a38e395f"
@@ -34,7 +38,7 @@
     },
     {
       "path": "doc/templates/readme-template.md",
-      "hash": "0xc88ad346e810e0e9"
+      "hash": "0xf33d5d6899e1b51d"
     }
   ]
 }
