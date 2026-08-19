@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0xf945d9906155d056"
+      "hash": "0xb8eeee4e2937ca0d"
     }
   ],
   "claude": {
@@ -26,7 +26,7 @@
   "instances": [
     {
       "path": ".claude/skills/readme/SKILL.md",
-      "hash": "0x72642eff1b222715"
+      "hash": "0x6d58a0e09d4ca150"
     },
     {
       "path": "doc/guides/readme-dna-guide.md",
@@ -46,7 +46,7 @@
     },
     {
       "path": "doc/templates/readme-template.md",
-      "hash": "0xf33d5d6899e1b51d"
+      "hash": "0xbc3cb615f24ba857"
     }
   ]
 }

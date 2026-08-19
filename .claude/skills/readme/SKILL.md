@@ -36,8 +36,8 @@ script and config file the README does not mention — and every entry it
 mentions that no longer exists.
 
 Elsewhere, verify that every code example runs unchanged and matches
-`example/`, that "Open Bugs" lists every known open bug, and that the
-documentation section links instead of duplicating.
+`example/`, and that the documentation section links instead of
+duplicating.
 
 ## 4. Fix
 

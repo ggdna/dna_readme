@@ -11,9 +11,8 @@ found in the LICENSE file in the root of this package.
 <1–3 sentences: what does this package do, which problem does it solve?>
 
 
-- A fixed bug leaves "Open Bugs" in the same commit that fixes it.
 - `README.md` (en) and `README.de.md` (de) are updated in the same
-  change — see [Multi Language Guide](./multi-language-guide.md).
+  change — see [Translate Guide](./translate-guide.md).
 
 
 ## Goals
@@ -61,7 +60,3 @@ Optional, for non-trivial mechanics
 <Ticket workflow, commit and review rules — link the
 [Develop Guide](./develop-guide.md) and the
 [Review Guide](./for-ai/ai-review-guide.md) instead of repeating them.>
-
-## Open Bugs
-
-- <ALL open bugs, one bullet each, ideally with an issue link>
