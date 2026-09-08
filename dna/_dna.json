@@ -4,6 +4,6 @@
   "version": 1,
 
   // No parent DNA. This layer is orthogonal: it carries only its own topic
-  // and is combined with dna_base and other layers by the consumer.
+  // and is combined with dna_dart, dna-ts and other layers by the consumer.
   "layers": []
 }
