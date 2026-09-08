@@ -1,0 +1,4 @@
+{
+  "issue_id": "feat-drop-dna-base-refs",
+  "description": "Drop the dna_base mention from the layer config comment"
+}
