@@ -5,18 +5,18 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: fe18c7e37d5acb3b43224fa255281dec007970d6fd01f6d76fcd88ed3777a117
+      sha256: fdcd9f70f9eb80df3bc5ed0fa67280df2595fd481948df8a9ab082e6a40ad04b
       url: "https://pub.dev"
     source: hosted
-    version: "107.0.0"
+    version: "108.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: f2dde9e50c23fc95b846b4ef334e98c3ae8c0effd5d2453b02fc9fb3f8939791
+      sha256: a51c769bff3b6dfbe9d60199b8606d808290702a296bef0c26a4ca391d414e46
       url: "https://pub.dev"
     source: hosted
-    version: "14.3.0"
+    version: "14.4.0"
   args:
     dependency: transitive
     description:
@@ -173,10 +173,10 @@ packages:
     dependency: "direct dev"
     description:
       name: helix
-      sha256: ee828b3ba233fc965c1f8b39307ea1e1483641da09b3fd10b1426864688172a0
+      sha256: "0eb0407fddd8431dbdc50660deb00a98f9dcc01c6d51769d48e6d9351da2df92"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.1"
+    version: "1.9.0"
   http_multi_server:
     dependency: transitive
     description:
