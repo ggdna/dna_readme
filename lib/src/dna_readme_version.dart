@@ -9,4 +9,4 @@
 // coverage:ignore-file
 
 /// The version of the `dna_readme` package.
-const String dnaReadmeVersion = '0.1.1';
+const String dnaReadmeVersion = '0.1.2';
