@@ -29,7 +29,13 @@ other layers by the consuming repo.
 ## Variables
 
 - `dnaCopyrightHolder` — the name in the license header of every file
-- `dnaGitOrg`, `dnaGitOrgUrl` — the organization the badge URL points at
+- `dnaGitOrg`, `dnaGitOrgUrl` — the organization the badge URL points at.
+  The URL is set on its own: derived from `dnaGitOrg`, the reference
+  would re-case the name (`my-org` → `myOrg`).
+
+They name the organization, so they are never inherited: every layer or
+project listing this one sets them in its own `dna/_vars.json`.
+`helix init` and `helix add` ask for the missing ones.
 
 ## Usage
 

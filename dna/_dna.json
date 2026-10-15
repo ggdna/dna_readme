@@ -7,8 +7,15 @@
   // and is combined with dna_dart, dna-ts and other layers by the consumer.
   "layers": [],
 
-  // The copyright header names the organization, so it is never
-  // inherited: every layer listing this one sets dnaCopyrightHolder in
-  // its own dna/_vars.json.
-  "mustOverride": { "dnaCopyrightHolder": true }
+  // The copyright header and the badge URLs name the organization, so
+  // they are never inherited: every layer listing this one sets
+  // dnaCopyrightHolder, dnaGitOrg and dnaGitOrgUrl in its own
+  // dna/_vars.json. dnaGitOrgUrl is asked for on its own: derived from
+  // dnaGitOrg, the reference re-cases the name — my-org turns into myOrg
+  // and the badges point nowhere.
+  "mustOverride": {
+    "dnaCopyrightHolder": true,
+    "dnaGitOrg": true,
+    "dnaGitOrgUrl": true
+  }
 }
