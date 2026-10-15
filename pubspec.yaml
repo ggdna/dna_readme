@@ -1,6 +1,6 @@
 name: dna_readme
 description: "DNA layer: the README guide and README template for our repositories"
-version: 0.2.0
+version: 0.3.0
 repository: https://github.com/ggdna/dna_readme.git
 
 environment:
