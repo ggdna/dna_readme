@@ -9,7 +9,7 @@ found in the LICENSE file in the root of this package.
 # README Guide
 
 Follow this guide for the README of a package or an app. A DNA repo — a
-repo that ships a hand-authored `dna/` folder — follows the
+layer other repos list in their `dna/_dna.json` — follows the
 [README DNA Guide](./readme-dna-guide.md) for its sections; the rules on
 style, languages and checks below apply to it as well.
 
