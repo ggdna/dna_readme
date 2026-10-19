@@ -94,6 +94,28 @@ void main() {
       expect(exitCode, 1);
     });
 
+    test('reports broken input instead of crashing', () async {
+      final dir = await Directory.systemTemp.createTemp('check_readme_');
+      addTearDown(() => dir.delete(recursive: true));
+      Directory('${dir.path}/dna/dot-claude/skills/c++').createSync(
+        recursive: true,
+      );
+      File('${dir.path}/dna/dot-claude/skills/c++/SKILL.md')
+          .writeAsStringSync('# C++');
+      File('${dir.path}/dna/_dna.json').writeAsStringSync('{ "layers": [');
+      File('${dir.path}/pubspec.yaml').writeAsStringSync('name: dna_broken');
+      File('${dir.path}/README.md').writeAsStringSync(
+        '# dna_broken\n\nSee [the table](100%.md).\n\n'
+        'Run `/c++` to start.\n',
+      );
+
+      final (exitCode, lines) = await _check(dir.path);
+      expect(lines, contains('✗ Link 100%.md is not a valid URI'));
+      expect(lines, contains('✗ dna/_dna.json is not valid JSON'));
+      expect(lines, isNot(contains('✗ Skill /c++ is not mentioned')));
+      expect(exitCode, 1);
+    });
+
     test('reports a missing README', () async {
       final dir = await Directory.systemTemp.createTemp('check_readme_');
       addTearDown(() => dir.delete(recursive: true));

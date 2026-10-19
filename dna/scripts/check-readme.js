@@ -53,6 +53,18 @@ const maxBadges = 5;
 const readText = (file) =>
   fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
 
+// Reads a JSONC file of the repo; a broken one becomes a finding.
+const readJsonc = (repoDir, file, findings) => {
+  const text = readText(path.join(repoDir, file));
+  if (text === null) return null;
+  try {
+    return parseJsonc(text);
+  } catch {
+    findings?.push(`${file} is not valid JSON`);
+    return null;
+  }
+};
+
 // Strips comments and trailing commas, so JSONC parses as JSON.
 export const parseJsonc = (text) => {
   let out = '';
@@ -104,7 +116,9 @@ export const yamlScalar = (text, key) => {
 
 // The GitHub organization and repo a repository URL points at
 const githubRepo = (url) => {
-  const m = (url ?? '').match(/github\.com[/:]([^/]+)\/([^/#?]+?)(?:\.git)?\/?$/);
+  const m = (url ?? '').match(
+    /github\.com[/:]([^/]+)\/([^/#?]+?)(?:\.git)?\/?$/,
+  );
   return m ? { org: m[1], repo: m[2] } : null;
 };
 
@@ -160,7 +174,10 @@ export const parseMarkdown = (markdown) => {
   for (const line of markdown.split(/\r?\n/)) {
     const match = line.match(/^ {0,3}(`{3,}|~{3,})\s*([\w-]*)/);
     const closes =
-      match && fence && match[1][0] === fence[0] && match[1].length >= fence.length;
+      match &&
+      fence &&
+      match[1][0] === fence[0] &&
+      match[1].length >= fence.length;
     if (fence && closes) {
       codeBlocks.push({ ...block, code: block.code.join('\n') });
       fence = null;
@@ -176,7 +193,7 @@ export const parseMarkdown = (markdown) => {
   const text = textLines
     .join('\n')
     .replace(/<!--[\s\S]*?-->/g, (c) => c.replace(/[^\n]/g, ''));
-  const prose = text.replace(/(`+)([\s\S]*?)\1/g, (_, ticks, code) => {
+  const prose = text.replace(/(`+)([\s\S]*?)\1/g, (_, _ticks, code) => {
     inlineCode.push(code);
     return '';
   });
@@ -188,7 +205,14 @@ export const parseMarkdown = (markdown) => {
       .filter(Boolean)
       .map((m) => m[1]);
 
-  return { text, prose, inlineCode, codeBlocks, h1: headings(1), h2: headings(2) };
+  return {
+    text,
+    prose,
+    inlineCode,
+    codeBlocks,
+    h1: headings(1),
+    h2: headings(2),
+  };
 };
 
 const normalize = (text) =>
@@ -255,8 +279,13 @@ const checkPlaceholders = (md, markdown, template, prefix, findings) => {
   const found = new Set();
   const add = (p) => found.add(p.replace(/\s+/g, ' '));
 
-  for (const m of md.prose.matchAll(/<(?!https?:|!--)[A-Z][^<>]*>/g)) add(m[0]);
-  for (const m of md.prose.matchAll(/<[a-z][^<>=]*\s[^<>=/]*>/g)) add(m[0]);
+  const sentences = [
+    /<(?!https?:|!--)[A-Z][^<>]*>/g,
+    /<[a-z][^<>=]*\s[^<>=/]*>/g,
+  ];
+  for (const pattern of sentences) {
+    for (const m of md.prose.matchAll(pattern)) add(m[0]);
+  }
 
   const tokens = new Set((template ?? '').match(/<[\w-]+>/g) ?? []);
   const code = [...md.inlineCode, ...md.codeBlocks.map((b) => b.code)];
@@ -288,63 +317,82 @@ const checkPlaceholders = (md, markdown, template, prefix, findings) => {
   }
 };
 
+const linkPattern = /\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g;
+const workflowPattern =
+  /github\.com\/([^/]+)\/([^/]+)\/actions\/workflows\/([^/?#]+)/;
+
+// A badge of the repo's own workflow points at its organization and at a
+// workflow file that exists. Image and link of a badge report once.
+const checkBadge = (badge, repoDir, pkg, prefix, findings) => {
+  const [, org, repo, workflow] = badge;
+  const own = pkg.repository
+    ? repo === pkg.repository.repo
+    : repo === pkg.name || repo === path.basename(repoDir);
+  if (!own) return;
+
+  if (pkg.repository && org !== pkg.repository.org) {
+    findings.add(
+      `${prefix}Badge points to the organization ${org}, ` +
+        `the repository is in ${pkg.repository.org}`,
+    );
+  }
+  if (!fs.existsSync(path.join(repoDir, '.github/workflows', workflow))) {
+    findings.add(
+      `${prefix}Badge points to .github/workflows/${workflow}, ` +
+        'which does not exist',
+    );
+  }
+};
+
+// A relative link points at a file of the repo.
+const checkLinkTarget = (target, repoDir, prefix, findings) => {
+  if (/^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(target)) return;
+  let file;
+  try {
+    file = decodeURI(target.replace(/[#?].*$/, ''));
+  } catch {
+    findings.push(`${prefix}Link ${target} is not a valid URI`);
+    return;
+  }
+  if (file && !fs.existsSync(path.resolve(repoDir, file))) {
+    findings.push(
+      `${prefix}Link ${target} points to a file that does not exist`,
+    );
+  }
+};
+
 const checkLinks = (md, repoDir, pkg, prefix, findings) => {
-  const links = [
-    ...md.prose.matchAll(/\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g),
-  ].map((m) => ({ label: m[1], target: m[2] }));
-  const targets = [
+  const links = [...md.prose.matchAll(linkPattern)].map((m) => ({
+    label: m[1],
+    target: m[2],
+  }));
+  const references = md.prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm);
+  const attributes = md.prose.matchAll(/\b(?:src|href|srcset)="([^"\s]+)/g);
+  const targets = new Set([
     ...links.map((l) => l.target),
-    ...[...md.prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm)].map((m) => m[1]),
-    ...[...md.prose.matchAll(/\b(?:src|href|srcset)="([^"\s]+)/g)].map(
-      (m) => m[1],
-    ),
-  ];
+    ...[...references, ...attributes].map((m) => m[1]),
+  ]);
 
   for (const { label } of links) {
     if (/^\s*(here|hier|this|link|click here)\s*$/i.test(label)) {
-      findings.push(`${prefix}Link text "${label}" does not say where it leads`);
-    }
-  }
-
-  const workflows = new Set();
-  for (const target of new Set(targets)) {
-    if (target.startsWith('http://')) {
-      findings.push(`${prefix}Link ${target} uses http, use https`);
-      continue;
-    }
-
-    const badge = target.match(
-      /github\.com\/([^/]+)\/([^/]+)\/actions\/workflows\/([^/?#]+)/,
-    );
-    if (badge) {
-      const [, org, repo, workflow] = badge;
-      const own = pkg.repository
-        ? repo === pkg.repository.repo
-        : repo === pkg.name || repo === path.basename(repoDir);
-      if (own && pkg.repository && org !== pkg.repository.org) {
-        workflows.add(
-          `${prefix}Badge points to the organization ${org}, ` +
-            `the repository is in ${pkg.repository.org}`,
-        );
-      }
-      if (own && !fs.existsSync(path.join(repoDir, '.github/workflows', workflow))) {
-        workflows.add(
-          `${prefix}Badge points to .github/workflows/${workflow}, ` +
-            'which does not exist',
-        );
-      }
-      continue;
-    }
-
-    if (/^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(target)) continue;
-    const file = decodeURI(target.replace(/[#?].*$/, ''));
-    if (file && !fs.existsSync(path.resolve(repoDir, file))) {
       findings.push(
-        `${prefix}Link ${target} points to a file that does not exist`,
+        `${prefix}Link text "${label}" does not say where it leads`,
       );
     }
   }
-  findings.push(...workflows);
+
+  const badgeFindings = new Set();
+  for (const target of targets) {
+    const badge = target.match(workflowPattern);
+    if (target.startsWith('http://')) {
+      findings.push(`${prefix}Link ${target} uses http, use https`);
+    } else if (badge) {
+      checkBadge(badge, repoDir, pkg, prefix, badgeFindings);
+    } else {
+      checkLinkTarget(target, repoDir, prefix, findings);
+    }
+  }
+  findings.push(...badgeFindings);
 };
 
 const checkMarkdown = (md, prefix, findings) => {
@@ -367,7 +415,9 @@ const checkTitleAndIntro = (md, pkg, findings) => {
     normalize(md.h1[0].replace(/^`?@[^/]+\//, '')).replace(/-/g, '') !==
     normalize(pkg.name).replace(/-/g, '')
   ) {
-    findings.push(`The title "${md.h1[0]}" is not the package name ${pkg.name}`);
+    findings.push(
+      `The title "${md.h1[0]}" is not the package name ${pkg.name}`,
+    );
   }
 
   const [first, second] = pkg.descriptions;
@@ -391,7 +441,9 @@ const checkTitleAndIntro = (md, pkg, findings) => {
 
 const checkGerman = (repoDir, md, pkg, template, findings) => {
   if (!/\[Deutsch\]\(\.?\/?README\.de\.md\)/.test(md.prose)) {
-    findings.push('README.md: the language switcher to README.de.md is missing');
+    findings.push(
+      'README.md: the language switcher to README.de.md is missing',
+    );
   }
   const markdown = readText(path.join(repoDir, 'README.de.md'));
   if (markdown === null) {
@@ -430,19 +482,17 @@ const checkGerman = (repoDir, md, pkg, template, findings) => {
 // .............................................................................
 // The checks of a DNA repo
 
-const checkDna = (repoDir, md, findings) => {
-  const dnaDir = path.join(repoDir, 'dna');
-  const text = md.text;
-
-  // Every file the layer ships is mentioned, by itself or by its folder
-  const files = listFiles(dnaDir).filter((f) => !/^_[^/]*\.json$/.test(f));
+// Every file the layer ships is mentioned, by itself or by its folder; a
+// skill by its command.
+const checkShippedFiles = (repoDir, text, findings) => {
+  const files = listFiles(path.join(repoDir, 'dna')).filter(
+    (f) => !/^_[^/]*\.json$/.test(f),
+  );
+  const skills = new Set();
   for (const file of files) {
     const skill = file.match(/^dot-claude\/skills\/([^/]+)\//);
     if (skill) {
-      const command = new RegExp(`(^|[\\s\`(])/${skill[1]}(?![\\w-])`, 'm');
-      if (!command.test(text)) {
-        findings.push(`Skill /${skill[1]} is not mentioned`);
-      }
+      skills.add(skill[1]);
       continue;
     }
     const folder = path.posix.dirname(`dna/${file}`);
@@ -450,25 +500,35 @@ const checkDna = (repoDir, md, findings) => {
       findings.push(`dna/${file} is not mentioned`);
     }
   }
-
-  // Every mentioned file exists
-  for (const m of new Set(text.match(/(?<![\w./-])dna\/[\w./-]*[\w/]/g) ?? [])) {
-    if (!fs.existsSync(path.join(repoDir, m))) {
-      findings.push(`${m} is mentioned but does not exist`);
+  for (const skill of skills) {
+    if (!mentions(text, `/${skill}`)) {
+      findings.push(`Skill /${skill} is not mentioned`);
     }
   }
+};
 
-  // Every variable is documented
-  const vars = readText(path.join(dnaDir, '_vars.json'));
-  for (const key of Object.keys(vars ? parseJsonc(vars) : {})) {
+const checkMentionedFiles = (repoDir, text, findings) => {
+  const paths = text.match(/(?<![\w./-])dna\/[\w./-]*[\w/]/g) ?? [];
+  for (const file of new Set(paths)) {
+    if (!fs.existsSync(path.join(repoDir, file))) {
+      findings.push(`${file} is mentioned but does not exist`);
+    }
+  }
+};
+
+const checkVariables = (repoDir, text, findings) => {
+  const vars = readJsonc(repoDir, 'dna/_vars.json', findings) ?? {};
+  for (const key of Object.keys(vars)) {
     if (!text.includes(`\`${key}\``)) {
       findings.push(`Variable ${key} is not documented`);
     }
   }
+};
 
-  // Every parent layer is named, or the layer says it is orthogonal
-  const config = readText(path.join(dnaDir, '_dna.json'));
-  const layers = config ? (parseJsonc(config).layers ?? []) : [];
+// Every parent layer is named, or the layer says it is orthogonal
+const checkParentLayers = (repoDir, text, findings) => {
+  const config = readJsonc(repoDir, 'dna/_dna.json', findings);
+  const layers = config?.layers ?? [];
   for (const layer of layers) {
     const name =
       typeof layer === 'string' ? layer : (layer.package ?? layer.name);
@@ -485,14 +545,21 @@ const checkDna = (repoDir, md, findings) => {
   }
 };
 
+const checkDna = (repoDir, md, findings) => {
+  checkShippedFiles(repoDir, md.text, findings);
+  checkMentionedFiles(repoDir, md.text, findings);
+  checkVariables(repoDir, md.text, findings);
+  checkParentLayers(repoDir, md.text, findings);
+};
+
 // .............................................................................
 
 // A DNA layer is named dna_* or dna-*, or declares variables its consumers
 // must set. A project that only uses layers has neither.
 export const isDnaRepo = (repoDir, packageName) => {
   if (/^dna[_-]/.test(packageName ?? '')) return true;
-  const config = readText(path.join(repoDir, 'dna', '_dna.json'));
-  return config !== null && parseJsonc(config).mustOverride !== undefined;
+  const config = readJsonc(repoDir, 'dna/_dna.json');
+  return config?.mustOverride !== undefined;
 };
 
 export const checkReadme = (repoDir) => {
