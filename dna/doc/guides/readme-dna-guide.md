@@ -8,9 +8,10 @@ found in the LICENSE file in the root of this package.
 
 # README DNA Guide
 
-Follow this guide for the README of a DNA repo — a repo that ships a
-hand-authored `dna/` folder. Its reader does not call an API: they want to
-know what their repo gets by adding the layer.
+Follow this guide for the README of a DNA repo — a layer other repos list
+in their `dna/_dna.json`. It is named `dna_*` or `dna-*`, or its
+`dna/_dna.json` declares `mustOverride`. Its reader does not call an API:
+they want to know what their repo gets by adding the layer.
 
 From the [README Guide](./readme-guide.md) apply the first screen, the
 motivation, linking, badges, Markdown, both languages and the check. The
@@ -45,7 +46,8 @@ setup, the scope names the limits.
 
 - Give guides, templates, skills, scripts and configuration their own
   section
-- Name each file with its path below `dna/` and one line on its purpose
+- Name each file with its path below `dna/` and one line on its purpose;
+  name a folder of helper files as a whole, e.g. `dna/scripts/functions/`
 - Name a skill by the command a user types, e.g. `/translate`
 - Say which guide calls a script
 

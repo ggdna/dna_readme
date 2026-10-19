@@ -15,8 +15,9 @@ found in the LICENSE file in the root of this package.
 
 ## 1. Pick the guide
 
-A repo with a hand-authored `dna/` folder is a DNA repo: read
-`doc/guides/readme-dna-guide.md` and
+A DNA repo is a layer other repos list in their `dna/_dna.json`: it is
+named `dna_*` or `dna-*`, or its `dna/_dna.json` declares `mustOverride`.
+In a DNA repo read `doc/guides/readme-dna-guide.md` and
 `doc/templates/readme-dna-template.md`.
 
 Every other repo: read `doc/guides/readme-guide.md` and
