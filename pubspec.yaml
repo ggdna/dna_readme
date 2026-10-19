@@ -1,5 +1,5 @@
 name: dna_readme
-description: "The DNA layer that tells a repo how to write and check its README."
+description: "Gives a repo the rules, templates and a check to write a good README."
 version: 0.3.0
 repository: https://github.com/ggdna/dna_readme.git
 

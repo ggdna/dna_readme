@@ -43,17 +43,23 @@ void main() {
     test('reports a package README that breaks the guide', () async {
       final (exitCode, lines) = await _check('$_samples/package_bad');
       expect(lines, [
+        '✗ The title "<PackageName>" is not the package name sample_package',
+        '✗ The sentence below the title differs from the description '
+            '"Formats sample values for the tests of this repo."',
         '✗ Section "## Motivation" is missing',
         '✗ Section "## License" is missing',
         '✗ Section "## Installation" belongs before "## Usage"',
         '✗ Placeholder <PackageName> is left',
-        '✗ Placeholder dart pub add <package> is left',
-        '✗ Badge points to .github/workflows/check.yaml, which does not exist',
+        '✗ Placeholder <what it does, in one line> is left',
+        '✗ Placeholder <package> is left',
+        '✗ Link text "here" does not say where it leads',
         '✗ Link doc/guides/missing-guide.md points to a file that does not '
             'exist',
         '✗ Link http://example.com uses http, use https',
-        '✗ The sentence below the title differs from the description '
-            '"Formats sample values for the tests of this repo."',
+        '✗ Badge points to the organization other-org, the repository is in '
+            'sample-org',
+        '✗ Badge points to .github/workflows/check.yaml, which does not exist',
+        '✗ 1 code block(s) without a language',
         '✗ README.md: the language switcher to README.de.md is missing',
         '✗ README.de.md is missing',
       ]);
@@ -64,7 +70,7 @@ void main() {
       final (exitCode, lines) = await _check('$_samples/package_german_drift');
       expect(lines, [
         '✗ README.de.md: the language switcher to README.md is missing',
-        '✗ README.de.md has 4 sections, README.md has 6',
+        '✗ README.de.md: 4 sections, README.md has 6',
         '✗ README.de.md: code block 2 differs from README.md',
       ]);
       expect(exitCode, 1);

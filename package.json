@@ -1,7 +1,7 @@
 {
   "name": "@ggdna/dna-readme",
   "version": "0.3.0",
-  "description": "The DNA layer that tells a repo how to write and check its README.",
+  "description": "Gives a repo the rules, templates and a check to write a good README.",
   "keywords": [
     "dna",
     "helix",

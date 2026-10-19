@@ -34,6 +34,8 @@ style, languages and checks below apply to it as well.
 - Write the motivation: the problem or friction that led to the repo, and
   what it aims for
 - Write it for a newcomer — the why is what READMEs leave out most often
+- Take it from the repo, its docs and its history; ask the user when they
+  do not tell, never invent it
 
 ## Show it working
 
@@ -75,14 +77,17 @@ style, languages and checks below apply to it as well.
 - Put a language switcher below the title: `English | [Deutsch](README.de.md)`
   in `README.md`, `[English](README.md) | Deutsch` in `README.de.md`
 - Keep both content- and structure-equal: the same sections in the same
-  order and the same code blocks, untranslated
+  order, the headings and the prose translated
+- Keep the code blocks identical, their comments included
 - Write the README in the language of the prompt first, then translate it
 - Follow `doc/guides/translate-guide.md` when the repo has one
 - pub.dev and npm show `README.md` only
 
 ## Check it
 
-- Run `node scripts/check-readme.js`; it reports missing or misplaced
-  sections, leftover placeholders, broken links and badges, a sentence
-  that differs from the `description`, and a German README that drifted
+- Run `node scripts/check-readme.js`; it reports a title that is not the
+  package name, missing or misplaced sections, leftover placeholders,
+  broken links and badges, too many badges, untagged code blocks, a
+  sentence that differs from the `description`, and a German README that
+  drifted
 - Update the README in the same change as the code it describes

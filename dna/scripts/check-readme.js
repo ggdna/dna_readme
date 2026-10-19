@@ -45,6 +45,8 @@ const dnaSections = [
   { name: 'License', required: true },
 ];
 
+const maxBadges = 5;
+
 // .............................................................................
 // Reading files
 
@@ -100,23 +102,40 @@ export const yamlScalar = (text, key) => {
   return value;
 };
 
+// The GitHub organization and repo a repository URL points at
+const githubRepo = (url) => {
+  const m = (url ?? '').match(/github\.com[/:]([^/]+)\/([^/#?]+?)(?:\.git)?\/?$/);
+  return m ? { org: m[1], repo: m[2] } : null;
+};
+
+// Name, descriptions and repository of pubspec.yaml and package.json
 const readPackage = (repoDir) => {
+  const result = { name: null, descriptions: [], repository: null };
+
   const pubspec = readText(path.join(repoDir, 'pubspec.yaml'));
   if (pubspec) {
-    return {
-      name: yamlScalar(pubspec, 'name'),
-      description: yamlScalar(pubspec, 'description'),
-    };
+    result.name = yamlScalar(pubspec, 'name');
+    const description = yamlScalar(pubspec, 'description');
+    if (description) result.descriptions.push(['pubspec.yaml', description]);
+    result.repository = githubRepo(yamlScalar(pubspec, 'repository'));
   }
+
   const packageJson = readText(path.join(repoDir, 'package.json'));
   if (packageJson) {
     const json = JSON.parse(packageJson);
-    return {
-      name: (json.name ?? '').replace(/^@[^/]+\//, ''),
-      description: json.description ?? null,
-    };
+    result.name ??= (json.name ?? '').replace(/^@[^/]+\//, '');
+    if (json.description) {
+      result.descriptions.push(['package.json', json.description]);
+    }
+    const url =
+      typeof json.repository === 'string'
+        ? json.repository
+        : json.repository?.url;
+    result.repository ??= githubRepo(url);
   }
-  return { name: path.basename(repoDir), description: null };
+
+  result.name ??= path.basename(repoDir);
+  return result;
 };
 
 const listFiles = (dir, base = dir) =>
@@ -129,38 +148,35 @@ const listFiles = (dir, base = dir) =>
 // .............................................................................
 // Parsing Markdown
 
-// Splits Markdown into prose and code. Prose keeps the line structure,
-// with code blocks, inline code and HTML comments blanked out.
-export const parseMarkdown = (text) => {
+// Splits Markdown into prose and code. `text` is the Markdown without code
+// blocks and HTML comments; `prose` also lacks the inline code.
+export const parseMarkdown = (markdown) => {
   const codeBlocks = [];
   const inlineCode = [];
-  const proseLines = [];
+  const textLines = [];
   let fence = null;
   let block = null;
 
-  for (const line of text.split(/\r?\n/)) {
+  for (const line of markdown.split(/\r?\n/)) {
     const match = line.match(/^ {0,3}(`{3,}|~{3,})\s*([\w-]*)/);
-    if (fence) {
-      if (match && match[1][0] === fence[0] && match[1].length >= fence.length) {
-        codeBlocks.push(block);
-        fence = null;
-      } else {
-        block.code.push(line);
-      }
-      proseLines.push('');
+    const closes =
+      match && fence && match[1][0] === fence[0] && match[1].length >= fence.length;
+    if (fence && closes) {
+      codeBlocks.push({ ...block, code: block.code.join('\n') });
+      fence = null;
+    } else if (fence) {
+      block.code.push(line);
     } else if (match) {
       fence = match[1];
       block = { language: match[2], code: [] };
-      proseLines.push('');
-    } else {
-      proseLines.push(line);
     }
+    textLines.push(fence || match ? '' : line);
   }
 
-  let prose = proseLines
+  const text = textLines
     .join('\n')
     .replace(/<!--[\s\S]*?-->/g, (c) => c.replace(/[^\n]/g, ''));
-  prose = prose.replace(/(`+)([\s\S]*?)\1/g, (_, ticks, code) => {
+  const prose = text.replace(/(`+)([\s\S]*?)\1/g, (_, ticks, code) => {
     inlineCode.push(code);
     return '';
   });
@@ -169,16 +185,10 @@ export const parseMarkdown = (text) => {
     prose
       .split('\n')
       .map((l) => l.match(new RegExp(`^#{${level}}\\s+(.+?)\\s*#*\\s*$`)))
-      .filter((m) => m && !m[0].startsWith('#'.repeat(level + 1)))
+      .filter(Boolean)
       .map((m) => m[1]);
 
-  return {
-    prose,
-    inlineCode,
-    codeBlocks: codeBlocks.map((b) => ({ ...b, code: b.code.join('\n') })),
-    h1: headings(1),
-    h2: headings(2),
-  };
+  return { text, prose, inlineCode, codeBlocks, h1: headings(1), h2: headings(2) };
 };
 
 const normalize = (text) =>
@@ -208,8 +218,16 @@ const introOf = (prose) => {
   );
 };
 
+// Whether text names a path or name on its own, not as part of a longer one
+const mentions = (text, name) => {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(?<![\\w./-])${escaped}(?![\\w-]|\\.\\w|/\\w)`).test(
+    text,
+  );
+};
+
 // .............................................................................
-// The checks
+// The checks of README.md and README.de.md
 
 const checkSections = (md, sections, findings) => {
   const known = sections.map((s) => s.name.toLowerCase());
@@ -231,57 +249,88 @@ const checkSections = (md, sections, findings) => {
   }
 };
 
-// A placeholder is a prose sentence in angle brackets, or a template line
-// with a placeholder that was copied unchanged.
-const checkPlaceholders = (md, text, template, findings) => {
+// A placeholder is a sentence in angle brackets, a token of the template
+// such as <package>, a template line copied unchanged, or dnaXxx.
+const checkPlaceholders = (md, markdown, template, prefix, findings) => {
   const found = new Set();
-  for (const m of md.prose.matchAll(/<(?!https?:)[A-Z][^<>]*>/g)) {
-    found.add(m[0].replace(/\s+/g, ' '));
+  const add = (p) => found.add(p.replace(/\s+/g, ' '));
+
+  for (const m of md.prose.matchAll(/<(?!https?:|!--)[A-Z][^<>]*>/g)) add(m[0]);
+  for (const m of md.prose.matchAll(/<[a-z][^<>=]*\s[^<>=/]*>/g)) add(m[0]);
+
+  const tokens = new Set((template ?? '').match(/<[\w-]+>/g) ?? []);
+  const code = [...md.inlineCode, ...md.codeBlocks.map((b) => b.code)];
+  for (const text of [md.prose, ...code]) {
+    for (const token of tokens) if (text.includes(token)) add(token);
+    for (const m of text.matchAll(/\b\w*Xxx\b/g)) add(m[0]);
   }
+
   const templateLines = new Set(
     (template ?? '')
       .split(/\r?\n/)
       .map((l) => l.trim())
       .filter((l) => /<[\w-]+>/.test(l) && !l.startsWith('<!--')),
   );
-  for (const line of text.split(/\r?\n/).map((l) => l.trim())) {
+  for (const line of markdown.split(/\r?\n/).map((l) => l.trim())) {
     const known = [...found].some((p) => line.includes(p));
-    if (templateLines.has(line) && !known) found.add(line);
+    if (templateLines.has(line) && !known) add(line);
   }
+
   for (const block of md.codeBlocks) {
-    if (block.language !== 'text' && block.language !== '') continue;
-    for (const m of block.code.matchAll(/<[A-Z][^<>]*\s[^<>]*>/g)) {
-      found.add(m[0].replace(/\s+/g, ' '));
-    }
+    if (block.language !== 'text') continue;
+    for (const m of block.code.matchAll(/<[A-Z][^<>]*\s[^<>]*>/g)) add(m[0]);
   }
+
   for (const placeholder of found) {
     const short =
       placeholder.length > 60 ? `${placeholder.slice(0, 57)}...` : placeholder;
-    findings.push(`Placeholder ${short} is left`);
+    findings.push(`${prefix}Placeholder ${short} is left`);
   }
 };
 
-const checkLinks = (md, repoDir, packageName, findings) => {
+const checkLinks = (md, repoDir, pkg, prefix, findings) => {
+  const links = [
+    ...md.prose.matchAll(/\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g),
+  ].map((m) => ({ label: m[1], target: m[2] }));
   const targets = [
-    ...[...md.prose.matchAll(/\]\(\s*<?([^)\s>]+)>?(?:\s+"[^"]*")?\s*\)/g)],
-    ...[...md.prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm)],
-    ...[...md.prose.matchAll(/\b(?:src|href|srcset)="([^"\s]+)/g)],
-  ].map((m) => m[1]);
+    ...links.map((l) => l.target),
+    ...[...md.prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm)].map((m) => m[1]),
+    ...[...md.prose.matchAll(/\b(?:src|href|srcset)="([^"\s]+)/g)].map(
+      (m) => m[1],
+    ),
+  ];
 
+  for (const { label } of links) {
+    if (/^\s*(here|hier|this|link|click here)\s*$/i.test(label)) {
+      findings.push(`${prefix}Link text "${label}" does not say where it leads`);
+    }
+  }
+
+  const workflows = new Set();
   for (const target of new Set(targets)) {
     if (target.startsWith('http://')) {
-      findings.push(`Link ${target} uses http, use https`);
+      findings.push(`${prefix}Link ${target} uses http, use https`);
       continue;
     }
 
     const badge = target.match(
-      /github\.com\/[^/]+\/([^/]+)\/actions\/workflows\/([^/?#]+)/,
+      /github\.com\/([^/]+)\/([^/]+)\/actions\/workflows\/([^/?#]+)/,
     );
-    if (badge && (badge[1] === packageName || badge[1] === path.basename(repoDir))) {
-      const workflow = path.join(repoDir, '.github', 'workflows', badge[2]);
-      if (!fs.existsSync(workflow)) {
-        findings.push(
-          `Badge points to .github/workflows/${badge[2]}, which does not exist`,
+    if (badge) {
+      const [, org, repo, workflow] = badge;
+      const own = pkg.repository
+        ? repo === pkg.repository.repo
+        : repo === pkg.name || repo === path.basename(repoDir);
+      if (own && pkg.repository && org !== pkg.repository.org) {
+        workflows.add(
+          `${prefix}Badge points to the organization ${org}, ` +
+            `the repository is in ${pkg.repository.org}`,
+        );
+      }
+      if (own && !fs.existsSync(path.join(repoDir, '.github/workflows', workflow))) {
+        workflows.add(
+          `${prefix}Badge points to .github/workflows/${workflow}, ` +
+            'which does not exist',
         );
       }
       continue;
@@ -290,41 +339,74 @@ const checkLinks = (md, repoDir, packageName, findings) => {
     if (/^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(target)) continue;
     const file = decodeURI(target.replace(/[#?].*$/, ''));
     if (file && !fs.existsSync(path.resolve(repoDir, file))) {
-      findings.push(`Link ${target} points to a file that does not exist`);
+      findings.push(
+        `${prefix}Link ${target} points to a file that does not exist`,
+      );
     }
+  }
+  findings.push(...workflows);
+};
+
+const checkMarkdown = (md, prefix, findings) => {
+  const badges = md.prose.match(/\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)/g) ?? [];
+  if (badges.length > maxBadges) {
+    findings.push(
+      `${prefix}${badges.length} badges, keep at most ${maxBadges}`,
+    );
+  }
+  const untagged = md.codeBlocks.filter((b) => !b.language).length;
+  if (untagged > 0) {
+    findings.push(`${prefix}${untagged} code block(s) without a language`);
   }
 };
 
-const checkIntro = (md, description, findings) => {
+const checkTitleAndIntro = (md, pkg, findings) => {
+  if (md.h1.length !== 1) {
+    findings.push(`README.md has ${md.h1.length} titles, it needs one`);
+  } else if (
+    normalize(md.h1[0].replace(/^`?@[^/]+\//, '')).replace(/-/g, '') !==
+    normalize(pkg.name).replace(/-/g, '')
+  ) {
+    findings.push(`The title "${md.h1[0]}" is not the package name ${pkg.name}`);
+  }
+
+  const [first, second] = pkg.descriptions;
+  if (second && normalize(first[1]) !== normalize(second[1])) {
+    findings.push(
+      `The description in ${first[0]} differs from the one in ${second[0]}`,
+    );
+  }
+
   const intro = introOf(md.prose);
   if (!intro) {
-    findings.push('The sentence below the title saying what it does is missing');
-    return;
-  }
-  if (description && !normalize(intro).includes(normalize(description))) {
     findings.push(
-      `The sentence below the title differs from the description "${description}"`,
+      'The sentence below the title saying what it does is missing',
+    );
+  } else if (first && !normalize(intro).includes(normalize(first[1]))) {
+    findings.push(
+      `The sentence below the title differs from the description "${first[1]}"`,
     );
   }
 };
 
-const checkGerman = (repoDir, md, findings) => {
-  const text = readText(path.join(repoDir, 'README.de.md'));
+const checkGerman = (repoDir, md, pkg, template, findings) => {
   if (!/\[Deutsch\]\(\.?\/?README\.de\.md\)/.test(md.prose)) {
     findings.push('README.md: the language switcher to README.de.md is missing');
   }
-  if (text === null) {
+  const markdown = readText(path.join(repoDir, 'README.de.md'));
+  if (markdown === null) {
     findings.push('README.de.md is missing');
     return;
   }
 
-  const de = parseMarkdown(text);
+  const prefix = 'README.de.md: ';
+  const de = parseMarkdown(markdown);
   if (!/\[English\]\(\.?\/?README\.md\)/.test(de.prose)) {
-    findings.push('README.de.md: the language switcher to README.md is missing');
+    findings.push(`${prefix}the language switcher to README.md is missing`);
   }
   if (de.h2.length !== md.h2.length) {
     findings.push(
-      `README.de.md has ${de.h2.length} sections, README.md has ${md.h2.length}`,
+      `${prefix}${de.h2.length} sections, README.md has ${md.h2.length}`,
     );
   }
 
@@ -332,45 +414,39 @@ const checkGerman = (repoDir, md, findings) => {
   const ge = de.codeBlocks.map((b) => b.code.trim());
   if (en.length !== ge.length) {
     findings.push(
-      `README.de.md has ${ge.length} code blocks, README.md has ${en.length}`,
+      `${prefix}${ge.length} code blocks, README.md has ${en.length}`,
     );
   } else {
     const index = en.findIndex((code, i) => code !== ge[i]);
     if (index >= 0) {
-      findings.push(
-        `README.de.md: code block ${index + 1} differs from README.md`,
-      );
+      findings.push(`${prefix}code block ${index + 1} differs from README.md`);
     }
   }
+
+  checkPlaceholders(de, markdown, template, prefix, findings);
+  checkLinks(de, repoDir, pkg, prefix, findings);
 };
 
-// Whether text names a path or name on its own, not as part of a longer one
-const mentions = (text, name) => {
-  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(`(?<![\\w./-])${escaped}(?![\\w-]|\\.\\w|/\\w)`).test(
-    text,
-  );
-};
+// .............................................................................
+// The checks of a DNA repo
 
-const checkDna = (repoDir, text, findings) => {
+const checkDna = (repoDir, md, findings) => {
   const dnaDir = path.join(repoDir, 'dna');
+  const text = md.text;
 
-  // Every file the layer ships is mentioned
+  // Every file the layer ships is mentioned, by itself or by its folder
   const files = listFiles(dnaDir).filter((f) => !/^_[^/]*\.json$/.test(f));
   for (const file of files) {
     const skill = file.match(/^dot-claude\/skills\/([^/]+)\//);
     if (skill) {
-      const command = new RegExp(`(^|[\\s\`(])/${skill[1]}\\b`, 'm');
+      const command = new RegExp(`(^|[\\s\`(])/${skill[1]}(?![\\w-])`, 'm');
       if (!command.test(text)) {
         findings.push(`Skill /${skill[1]} is not mentioned`);
       }
       continue;
     }
-    const paths = file
-      .split('/')
-      .map((_, i, parts) => `dna/${parts.slice(0, i + 1).join('/')}`)
-      .map((p, i, all) => (i < all.length - 1 ? `${p}/` : p));
-    if (!paths.some((p) => mentions(text, p))) {
+    const folder = path.posix.dirname(`dna/${file}`);
+    if (!mentions(text, `dna/${file}`) && !mentions(text, `${folder}/`)) {
       findings.push(`dna/${file} is not mentioned`);
     }
   }
@@ -402,43 +478,46 @@ const checkDna = (repoDir, text, findings) => {
       findings.push(`Parent layer ${name} is not named`);
     }
   }
-  if (layers.length === 0 && !/orthogonal/i.test(text)) {
+  const orthogonal =
+    /\borthogonal\b/i.test(text) && !/\bnot orthogonal\b/i.test(text);
+  if (layers.length === 0 && !orthogonal) {
     findings.push('The README does not say that the layer is orthogonal');
   }
 };
 
 // .............................................................................
 
-export const isDnaRepo = (repoDir, packageName) =>
-  /^dna[_-]/.test(packageName ?? '') ||
-  fs.existsSync(path.join(repoDir, 'dna', '_vars.json'));
+// A DNA layer is named dna_* or dna-*, or declares variables its consumers
+// must set. A project that only uses layers has neither.
+export const isDnaRepo = (repoDir, packageName) => {
+  if (/^dna[_-]/.test(packageName ?? '')) return true;
+  const config = readText(path.join(repoDir, 'dna', '_dna.json'));
+  return config !== null && parseJsonc(config).mustOverride !== undefined;
+};
 
 export const checkReadme = (repoDir) => {
-  const text = readText(path.join(repoDir, 'README.md'));
-  if (text === null) return ['README.md is missing'];
+  const markdown = readText(path.join(repoDir, 'README.md'));
+  if (markdown === null) return ['README.md is missing'];
 
   const findings = [];
   const pkg = readPackage(repoDir);
   const isDna = isDnaRepo(repoDir, pkg.name);
-  const md = parseMarkdown(text);
-
-  if (md.h1.length !== 1) {
-    findings.push(`README.md has ${md.h1.length} titles, it needs one`);
-  }
-  checkSections(md, isDna ? dnaSections : packageSections, findings);
+  const md = parseMarkdown(markdown);
   const template = readText(
     path.join(
       repoDir,
-      'doc',
-      'templates',
+      'doc/templates',
       isDna ? 'readme-dna-template.md' : 'readme-template.md',
     ),
   );
-  checkPlaceholders(md, text, template, findings);
-  checkLinks(md, repoDir, pkg.name, findings);
-  checkIntro(md, pkg.description, findings);
-  checkGerman(repoDir, md, findings);
-  if (isDna) checkDna(repoDir, text, findings);
+
+  checkTitleAndIntro(md, pkg, findings);
+  checkSections(md, isDna ? dnaSections : packageSections, findings);
+  checkPlaceholders(md, markdown, template, '', findings);
+  checkLinks(md, repoDir, pkg, '', findings);
+  checkMarkdown(md, '', findings);
+  checkGerman(repoDir, md, pkg, template, findings);
+  if (isDna) checkDna(repoDir, md, findings);
 
   return findings;
 };

@@ -35,9 +35,13 @@ layer the README does not mention.
 
 ## 3. Check what the script cannot
 
-- The motivation says why the repo exists, not what it does
-- Every code example runs unchanged and matches `example/`, and its
-  output is the one shown
+- The motivation says why the repo exists, not what it does. Ask the user
+  when the repo does not tell — never invent it
+- In a package repo every code example runs unchanged and matches
+  `example/`, and its output is the one shown
+- In a DNA repo the usage says where the files land and how to use what
+  the layer ships
+- Headings are in sentence case
 - The documentation section links instead of duplicating
 - `README.de.md` says the same as `README.md`, not only in structure
 
