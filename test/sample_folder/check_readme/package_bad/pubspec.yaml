@@ -1,0 +1,4 @@
+name: sample_package
+description: Formats sample values for the tests of this repo.
+version: 1.0.0
+repository: https://github.com/sample-org/sample_package
