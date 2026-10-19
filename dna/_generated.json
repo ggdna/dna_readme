@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0xd941f7b0755c1ddb"
+      "hash": "0x530fde007b63728b"
     }
   ],
   "claude": {
@@ -27,19 +27,19 @@
   "instances": [
     {
       "path": ".claude/skills/readme/SKILL.md",
-      "hash": "0xbbf27f548401dc67"
+      "hash": "0x9ff337d2d12f2ef9"
     },
     {
       "path": "doc/guides/readme-dna-guide.md",
-      "hash": "0xa2e6cc6457aa25e1"
+      "hash": "0xc1917e5f9ada53cd"
     },
     {
       "path": "doc/guides/readme-guide.md",
-      "hash": "0xb11499b1ea9f981c"
+      "hash": "0x330b8a023e6ba9bf"
     },
     {
       "path": "doc/templates/readme-dna-template.md",
-      "hash": "0x4c99d134d82e670c"
+      "hash": "0xcde060363c0ea220"
     },
     {
       "path": "doc/templates/readme-template.md",
@@ -47,7 +47,7 @@
     },
     {
       "path": "scripts/check-readme.js",
-      "hash": "0x2d107938d0e5e27c"
+      "hash": "0x5e6fd59865fc22e1"
     }
   ]
 }

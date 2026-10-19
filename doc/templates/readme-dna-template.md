@@ -31,7 +31,11 @@ dart pub add dev:<dna_name>       # Dart projects
 helix init
 ```
 
-The placed test instantiates and verifies the DNA on every test run.
+`helix init` places a test that instantiates and verifies the DNA on every
+test run. It copies <which files land where, e.g. the guides to `doc/`>.
+
+<How to use what the layer ships: the command of a skill or a script, and
+what it prints.>
 
 ## Guides
 
@@ -67,13 +71,16 @@ it is orthogonal and carries only its own topic.>
 
 ## Variables
 
-- `dnaXxx` — <what a consuming repo sets it to>
+- `dnaXxx` — <what it means, and whether a consuming repo must set it>
 
 ## Development
 
 The `dna/` folder is hand-authored source and is never generated. The repo
 instantiates its own DNA — run `dart test` after changes; commit first, a
 file the DNA would overwrite must not carry uncommitted work.
+
+Edit the files below `dna/`, never their copies outside it: the test
+overwrites them.
 
 ## License
 
