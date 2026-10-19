@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x688de3c437c3130d"
+      "hash": "0xb8ce85c3773a1ffd"
     }
   ],
   "claude": {
@@ -39,11 +39,11 @@
     },
     {
       "path": "doc/templates/readme-dna-template.md",
-      "hash": "0xcde060363c0ea220"
+      "hash": "0x1e0b11774ea75075"
     },
     {
       "path": "doc/templates/readme-template.md",
-      "hash": "0xdf5034b1c9f778e1"
+      "hash": "0x3f146a342b05a948"
     },
     {
       "path": "scripts/check-readme.js",

@@ -12,7 +12,7 @@ English | [Deutsch](README.de.md)
 
 <!-- Keep the badges that apply, at most five. -->
 
-[![CI](https://github.com/ggsuite/<package>/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/ggsuite/<package>/actions/workflows/quick_check.yaml)
+[![CI](https://github.com/ggdna/<package>/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/ggdna/<package>/actions/workflows/quick_check.yaml)
 [![pub package](https://img.shields.io/pub/v/<package>.svg)](https://pub.dev/packages/<package>)
 [![npm](https://img.shields.io/npm/v/<package>.svg)](https://www.npmjs.com/package/<package>)
 

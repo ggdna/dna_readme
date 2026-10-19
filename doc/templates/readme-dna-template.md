@@ -12,7 +12,7 @@ English | [Deutsch](README.de.md)
 
 <!-- Optional, only when the repo has the workflow. -->
 
-[![CI](https://github.com/ggsuite/<dna_name>/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/ggsuite/<dna_name>/actions/workflows/quick_check.yaml)
+[![CI](https://github.com/ggdna/<dna_name>/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/ggdna/<dna_name>/actions/workflows/quick_check.yaml)
 
 <One sentence: what a repo gets by adding this layer. The same text as the
 `description` in `pubspec.yaml` or `package.json`.>
