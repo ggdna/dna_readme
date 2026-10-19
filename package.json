@@ -1,7 +1,7 @@
 {
   "name": "@ggdna/dna-readme",
   "version": "0.3.0",
-  "description": "DNA layer: the README guide and README template for our repositories",
+  "description": "The DNA layer that tells a repo how to write and check its README.",
   "keywords": [
     "dna",
     "helix",
@@ -19,6 +19,7 @@
   "files": [
     "dna",
     "README.md",
+    "README.de.md",
     "LICENSE"
   ],
   "engines": {

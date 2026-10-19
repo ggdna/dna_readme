@@ -8,9 +8,30 @@ found in the LICENSE file in the root of this package.
 
 # <dna_name>
 
-<One sentence: what a repo gets by adding this layer.>
+English | [Deutsch](README.de.md)
 
-<Optional: what this layer deliberately leaves to other layers.>
+<!-- Optional, only when the repo has the workflow. -->
+
+[![CI](dnaGitOrgUrl/<dna_name>/actions/workflows/quick_check.yaml/badge.svg)](dnaGitOrgUrl/<dna_name>/actions/workflows/quick_check.yaml)
+
+<One sentence: what a repo gets by adding this layer. The same text as the
+`description` in `pubspec.yaml` or `package.json`.>
+
+## Motivation
+
+<Why this layer exists: which problem in the consuming repos it solves.>
+
+## Usage
+
+Declare it as a dev-dependency and initialize once:
+
+```bash
+pnpm add -D @<scope>/<npm-name>   # TypeScript projects
+dart pub add dev:<dna_name>       # Dart projects
+helix init
+```
+
+The placed test instantiates and verifies the DNA on every test run.
 
 ## Guides
 
@@ -33,6 +54,10 @@ found in the LICENSE file in the root of this package.
 - `dna/dot-github/workflows/<name>.yaml` — <which pipeline it defines>
 - `dna/dot-vscode/<name>.json` — <which editor setting it contributes>
 
+## Scope
+
+<What this layer deliberately leaves to other layers.>
+
 ## Layers
 
 <Which parents this layer builds on and what each contributes — or that
@@ -44,20 +69,12 @@ it is orthogonal and carries only its own topic.>
 
 - `dnaXxx` — <what a consuming repo sets it to>
 
-## Usage
-
-Declare it as a dev-dependency and initialize once:
-
-```bash
-pnpm add -D @<scope>/<npm-name>   # TypeScript projects
-dart pub add dev:<dart_name>      # Dart projects
-helix init
-```
-
-The placed test instantiates and verifies the DNA on every test run.
-
 ## Development
 
 The `dna/` folder is hand-authored source and is never generated. The repo
 instantiates its own DNA — run `dart test` after changes; commit first, a
 file the DNA would overwrite must not carry uncommitted work.
+
+## License
+
+<SPDX identifier, e.g. MIT> — see [LICENSE](LICENSE).
