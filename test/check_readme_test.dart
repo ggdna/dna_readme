@@ -86,6 +86,7 @@ void main() {
         '✗ README.md: the language switcher to README.de.md is missing',
         '✗ README.de.md is missing',
         '✗ dna/doc/guides/other-guide.md is not mentioned',
+        '✗ dna/dot-prettierrc is not mentioned',
         '✗ Skill /sample is not mentioned',
         '✗ dna/doc/guides/removed-guide.md is mentioned but does not exist',
         '✗ Variable dnaSampleOrg is not documented',

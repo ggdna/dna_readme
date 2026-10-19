@@ -495,8 +495,11 @@ const checkShippedFiles = (repoDir, text, findings) => {
       skills.add(skill[1]);
       continue;
     }
+    // A file right below dna/ needs its own mention: every README names
+    // the dna/ folder itself in its development section.
     const folder = path.posix.dirname(`dna/${file}`);
-    if (!mentions(text, `dna/${file}`) && !mentions(text, `${folder}/`)) {
+    const byFolder = folder !== 'dna' && mentions(text, `${folder}/`);
+    if (!mentions(text, `dna/${file}`) && !byFolder) {
       findings.push(`dna/${file} is not mentioned`);
     }
   }

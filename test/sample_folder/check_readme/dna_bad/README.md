@@ -16,3 +16,5 @@ helix init
 ## Layers
 
 Builds on test/dna/dna_parent.dart only.
+
+The `dna/` folder is hand-authored source.
