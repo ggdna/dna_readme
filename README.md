@@ -83,6 +83,12 @@ points to, the `LICENSE` file, the `example/` code and a translation
 guide such as `doc/guides/translate-guide.md` to the repo and to other
 layers.
 
+## Publishing
+
+`dna/dot-pubignore` keeps `/doc/guides/`, `/doc/templates/` and `/scripts/` out
+of the package `dart pub publish` uploads. helix joins it with the ignore files
+of the other layers into the project's `.pubignore`.
+
 ## Layers
 
 The layer is orthogonal: `dna/_dna.json` lists no parent layers. It
