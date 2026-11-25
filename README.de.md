@@ -85,6 +85,13 @@ den das Badge zeigt, die Datei `LICENSE`, den Code in `example/` und
 einen Übersetzungs-Guide wie `doc/guides/translate-guide.md` dem Repo und
 anderen Schichten.
 
+## Veröffentlichen
+
+`dna/dot-pubignore` hält `/doc/guides/`, `/doc/templates/` und `/scripts/`
+aus dem Paket heraus, das `dart pub publish` hochlädt. helix fügt sie mit
+den Ignore-Dateien der anderen Schichten zur `.pubignore` des Projekts
+zusammen.
+
 ## Schichten
 
 Die Schicht ist orthogonal: `dna/_dna.json` nennt keine Eltern-Schichten.

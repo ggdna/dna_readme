@@ -1,12 +1,12 @@
 name: dna_readme
 description: "Gives a repo the rules, templates and a check to write a good README."
-version: 0.3.1
+version: 0.4.0
 repository: https://github.com/ggdna/dna_readme.git
 
 environment:
   sdk: ">=3.13.0 <4.0.0"
 
 dev_dependencies:
-  helix: ^1.12.0
+  helix: ^1.17.0
   lints: ^6.1.0
   test: ^1.33.0
