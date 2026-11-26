@@ -15,7 +15,7 @@ style, languages and checks below apply to it as well.
 
 ## @template Copy the template
 
-- Copy `doc/templates/readme-template.md` to `README.md`, or revise an
+- Copy `doc/en/templates/readme-template.md` to `README.md`, or revise an
   existing README against it
 - Keep the order of the sections, drop the optional ones the repo has
   nothing for
@@ -71,16 +71,19 @@ style, languages and checks below apply to it as well.
 - Use `https` links only — pub.dev deducts points for `http`
 - Add no table of contents, GitHub generates one
 
-## @languages Write it in two languages
+## @languages Write it in every language of the repo
 
-- Keep `README.md` in English and `README.de.md` in German
-- Put a language switcher below the title: `English | [Deutsch](README.de.md)`
-  in `README.md`, `[English](README.md) | Deutsch` in `README.de.md`
-- Keep both content- and structure-equal: the same sections in the same
-  order, the headings and the prose translated
+- The languages of this repo, the leading one first, are `dnaLanguages`
+- Keep `README.md` in English and one `README.<lang>.md` per other
+  language, e.g. `README.de.md`, `README.fa.md`
+- Put a language switcher below the title that names every language and
+  links all others, e.g. `English | [Deutsch](README.de.md)` in
+  `README.md`, `[English](README.md) | Deutsch` in `README.de.md`
+- Keep all of them content- and structure-equal: the same sections in the
+  same order, the headings and the prose translated
 - Keep the code blocks identical, their comments included
-- Write the README in the language of the prompt first, then translate it
-- Follow `doc/guides/translate-guide.md` when the repo has one
+- Write the README in the leading language first, then translate it
+- Follow `doc/en/guides/translate-guide.md`
 - pub.dev and npm show `README.md` only
 
 ## @check Check it

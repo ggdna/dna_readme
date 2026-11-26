@@ -15,11 +15,10 @@ import 'package:test/test.dart';
 const _samples = 'test/sample_folder/check_readme';
 
 Future<(int, List<String>)> _check(String repoDir) async {
-  final result = await Process.run(
-    'node',
-    ['dna/scripts/check-readme.js', repoDir],
-    stdoutEncoding: utf8,
-  );
+  final result = await Process.run('node', [
+    'dna/scripts/check-readme.js',
+    repoDir,
+  ], stdoutEncoding: utf8);
   final lines = (result.stdout as String)
       .split('\n')
       .map((l) => l.trim())
@@ -31,7 +30,11 @@ Future<(int, List<String>)> _check(String repoDir) async {
 void main() {
   group('check-readme.js', () {
     group('passes', () {
-      for (final repo in ['$_samples/package_good', '$_samples/dna_good', '.']) {
+      for (final repo in [
+        '$_samples/package_good',
+        '$_samples/dna_good',
+        '.',
+      ]) {
         test(repo, () async {
           final (exitCode, lines) = await _check(repo);
           expect(lines, ['✓ README matches the guide']);
@@ -97,9 +100,8 @@ void main() {
     test('reports broken input instead of crashing', () async {
       final dir = await Directory.systemTemp.createTemp('check_readme_');
       addTearDown(() => dir.delete(recursive: true));
-      Directory('${dir.path}/dna/dot-claude/skills/c++').createSync(
-        recursive: true,
-      );
+      Directory('${dir.path}/dna/dot-claude/skills/c++')
+          .createSync(recursive: true);
       File('${dir.path}/dna/dot-claude/skills/c++/SKILL.md')
           .writeAsStringSync('# C++');
       File('${dir.path}/dna/_dna.json').writeAsStringSync('{ "layers": [');
@@ -114,6 +116,43 @@ void main() {
       expect(lines, contains('✗ dna/_dna.json is not valid JSON'));
       expect(lines, isNot(contains('✗ Skill /c++ is not mentioned')));
       expect(exitCode, 1);
+    });
+
+    test('checks the languages dnaLanguages lists', () async {
+      final dir = await Directory.systemTemp.createTemp('check_readme_');
+      addTearDown(() => dir.delete(recursive: true));
+      final good = Directory('$_samples/package_good');
+      for (final f in good.listSync(recursive: true).whereType<File>()) {
+        final rel = f.path.substring(good.path.length + 1);
+        File('${dir.path}/$rel')
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(f.readAsBytesSync());
+      }
+      // The key is assembled: the DNA would replace the plain name.
+      const key =
+          'dna'
+          'Languages';
+      void setLanguages(String languages) => File('${dir.path}/dna/_dna.json')
+          .writeAsStringSync(
+            jsonEncode({
+              'version': 1,
+              'layers': <String>[],
+              'vars': {key: languages},
+            }),
+          );
+      setLanguages('en,fa');
+
+      final (exitCode, lines) = await _check(dir.path);
+      expect(lines, [
+        '✗ README.md: the language switcher to README.fa.md is missing',
+        '✗ README.fa.md is missing',
+      ]);
+      expect(exitCode, 1);
+
+      setLanguages('en');
+      final (enOnly, enLines) = await _check(dir.path);
+      expect(enLines, ['✓ README matches the guide']);
+      expect(enOnly, 0);
     });
 
     test('reports a missing README', () async {

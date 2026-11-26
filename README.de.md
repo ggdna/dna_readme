@@ -48,19 +48,19 @@ Sonst gibt das Skript eine Zeile pro Befund aus und endet mit Code 1.
 
 ## Guides
 
-- `dna/doc/guides/readme-guide.md` — wie man die README eines Pakets oder
+- `dna/doc/en/guides/readme-guide.md` — wie man die README eines Pakets oder
   einer App schreibt: erster Bildschirm, Motivation, Installation und
   Verwendung, Grenzen, Links, Badges, Markdown-Stil und die deutsche
   Übersetzung
-- `dna/doc/guides/readme-dna-guide.md` — was die README eines DNA-Repos
+- `dna/doc/en/guides/readme-dna-guide.md` — was die README eines DNA-Repos
   ergänzt: was die Schicht mitliefert, ihren Umfang, ihre Eltern-Schichten
   und ihre Variablen
 
 ## Templates
 
-- `dna/doc/templates/readme-template.md` — die README eines Pakets oder
+- `dna/doc/en/templates/readme-template.md` — die README eines Pakets oder
   einer App
-- `dna/doc/templates/readme-dna-template.md` — die README eines DNA-Repos
+- `dna/doc/en/templates/readme-dna-template.md` — die README eines DNA-Repos
 
 ## Skills
 
@@ -82,12 +82,12 @@ Sonst gibt das Skript eine Zeile pro Befund aus und endet mit Code 1.
 Die Schicht legt nur die Regeln für die README fest und prüft sie. Sie
 schreibt die README nicht von selbst und überlässt den CI-Workflow, auf
 den das Badge zeigt, die Datei `LICENSE`, den Code in `example/` und
-einen Übersetzungs-Guide wie `doc/guides/translate-guide.md` dem Repo und
+einen Übersetzungs-Guide wie `doc/en/guides/translate-guide.md` dem Repo und
 anderen Schichten.
 
 ## Veröffentlichen
 
-`dna/dot-pubignore` hält `/doc/guides/`, `/doc/templates/` und `/scripts/`
+`dna/dot-pubignore` hält `/doc/*/guides/`, `/doc/*/templates/` und `/scripts/`
 aus dem Paket heraus, das `dart pub publish` hochlädt. helix fügt sie mit
 den Ignore-Dateien der anderen Schichten zur `.pubignore` des Projekts
 zusammen.

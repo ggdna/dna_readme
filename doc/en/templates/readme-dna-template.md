@@ -32,18 +32,18 @@ helix init
 ```
 
 `helix init` places a test that instantiates and verifies the DNA on every
-test run. It copies <which files land where, e.g. the guides to `doc/`>.
+test run. It copies <which files land where, e.g. the guides to `doc/en/guides/`>.
 
 <How to use what the layer ships: the command of a skill or a script, and
 what it prints.>
 
 ## Guides
 
-- `dna/doc/guides/<topic>-guide.md` — <what it tells the reader to do>
+- `dna/doc/en/guides/<topic>-guide.md` — <what it tells the reader to do>
 
 ## Templates
 
-- `dna/doc/templates/<topic>-template.md` — <what it is a template for>
+- `dna/doc/en/templates/<topic>-template.md` — <what it is a template for>
 
 ## Skills
 

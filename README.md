@@ -48,18 +48,26 @@ Otherwise the script prints one line per finding and exits with code 1.
 
 ## Guides
 
-- `dna/doc/guides/readme-guide.md` — how to write the README of a package
+- `dna/doc/en/guides/readme-guide.md` — how to write the README of a package
   or an app: the first screen, motivation, install and usage, limits,
   links, badges, Markdown style and the German translation
-- `dna/doc/guides/readme-dna-guide.md` — what the README of a DNA repo
+- `dna/doc/en/guides/readme-dna-guide.md` — what the README of a DNA repo
   adds: what the layer ships, its scope, its parent layers and its
   variables
 
+Every file of `dna/doc/en/` also ships in German and Farsi, with the
+same name:
+
+- `dna/doc/de/guides/`
+- `dna/doc/de/templates/`
+- `dna/doc/fa/guides/`
+- `dna/doc/fa/templates/`
+
 ## Templates
 
-- `dna/doc/templates/readme-template.md` — the README of a package or an
+- `dna/doc/en/templates/readme-template.md` — the README of a package or an
   app
-- `dna/doc/templates/readme-dna-template.md` — the README of a DNA repo
+- `dna/doc/en/templates/readme-dna-template.md` — the README of a DNA repo
 
 ## Skills
 
@@ -80,12 +88,12 @@ Otherwise the script prints one line per finding and exits with code 1.
 The layer only sets the rules for the README and checks them. It does not
 write the README on its own, and it leaves the CI workflow the badge
 points to, the `LICENSE` file, the `example/` code and a translation
-guide such as `doc/guides/translate-guide.md` to the repo and to other
+guide such as `doc/en/guides/translate-guide.md` to the repo and to other
 layers.
 
 ## Publishing
 
-`dna/dot-pubignore` keeps `/doc/guides/`, `/doc/templates/` and `/scripts/` out
+`dna/dot-pubignore` keeps `/doc/*/guides/`, `/doc/*/templates/` and `/scripts/` out
 of the package `dart pub publish` uploads. helix joins it with the ignore files
 of the other layers into the project's `.pubignore`.
 

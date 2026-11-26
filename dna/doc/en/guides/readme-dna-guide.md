@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright (c) ggsuite
+Copyright (c) dnaCopyrightHolder
 
 Use of this source code is governed by terms that can be
 found in the LICENSE file in the root of this package.
@@ -18,13 +18,13 @@ motivation, linking, badges, Markdown, both languages and the check. The
 example, the limitations and the status do not apply: the usage shows the
 setup, the scope names the limits.
 
-## Copy the template
+## @template Copy the template
 
-- Copy `doc/templates/readme-dna-template.md` to `README.md`, or revise
+- Copy `doc/en/templates/readme-dna-template.md` to `README.md`, or revise
   an existing README against it
 - Drop every section this layer has nothing for
 
-## Say what the layer does
+## @layer Say what the layer does
 
 - Open with one sentence: what a repo gets by adding this layer
 - Use that sentence as the `description` in `pubspec.yaml` and
@@ -33,7 +33,7 @@ setup, the scope names the limits.
 - Write the motivation: which problem in the consuming repos the layer
   solves
 
-## Show how to use it
+## @show Show how to use it
 
 - Show the setup right after the motivation, a reader wants to try it
 - Say where the files land in a consuming repo, e.g. `dna/doc/` in
@@ -42,7 +42,7 @@ setup, the scope names the limits.
   and what it prints
 - Name hard requirements, e.g. Node.js for a script
 
-## List what the layer ships
+## @layer-ships List what the layer ships
 
 - Give guides, templates, skills, scripts and configuration their own
   section
@@ -51,11 +51,11 @@ setup, the scope names the limits.
 - Name a skill by the command a user types, e.g. `/translate`
 - Say which guide calls a script
 
-## Name its scope
+## @scope Name its scope
 
 - Name what it deliberately leaves to other layers or to the repo
 
-## Name the layers it builds on
+## @layers Name the layers it builds on
 
 - List the parent layers from `dna/_dna.json`, each linked to its repo
 - Say what each parent contributes, not just its name
@@ -63,7 +63,7 @@ setup, the scope names the limits.
   base of every layer, is no parent
 - Name the sections it extends in a parent, and the tag it uses
 
-## Document the variables
+## @variables Document the variables
 
 - List every variable of `dna/_vars.json`
 - Give the meaning; name a value only where it explains why the variable
@@ -71,7 +71,7 @@ setup, the scope names the limits.
 - Say which ones a consuming repo must set itself, the ones
   `mustOverride` in `dna/_dna.json` marks
 
-## Keep it current
+## @current Keep it current
 
 - Say in the development section that only `dna/` is edited, never its
   copies the test writes

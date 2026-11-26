@@ -5,7 +5,7 @@
       "name": "base",
       "package": "helix",
       "ecosystem": null,
-      "resolvedVersion": "1.16.0",
+      "resolvedVersion": "1.18.0",
       "via": null,
       "hash": "0x6883da335b415f9d"
     },
@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x4fa444d50d63a7a9"
+      "hash": "0xfb507a8f6df4e668"
     }
   ],
   "claude": {
@@ -23,37 +23,70 @@
     "claudeMdFromDna": false,
     "blockHash": null
   },
-  "baseVersion": "1.16.0",
+  "baseVersion": "1.18.0",
   "baseHash": "0x6883da335b415f9d",
   "configHash": "0x9981d39af3270962",
+  "gitignoreHash": "0x1b0ee74d5e941279",
   "instances": [
     {
       "path": ".claude/skills/readme/SKILL.md",
-      "hash": "0x9e839de42a8301e5"
+      "hash": "0xef7396a3271ffbce"
     },
     {
       "path": ".pubignore",
-      "hash": "0xfd3d639a8e8ad148"
+      "hash": "0x3a9f388f7c6fec99"
     },
     {
-      "path": "doc/guides/readme-dna-guide.md",
-      "hash": "0xf32e5c6795209eb3"
+      "path": "doc/de/guides/readme-dna-guide.md",
+      "hash": "0xfcd4ee9ea5c17154"
     },
     {
-      "path": "doc/guides/readme-guide.md",
-      "hash": "0x90a43113ec670292"
+      "path": "doc/de/guides/readme-guide.md",
+      "hash": "0xc455ae962ebbe136"
     },
     {
-      "path": "doc/templates/readme-dna-template.md",
-      "hash": "0x1e0b11774ea75075"
+      "path": "doc/de/templates/readme-dna-template.md",
+      "hash": "0x909fc02da2609474"
     },
     {
-      "path": "doc/templates/readme-template.md",
-      "hash": "0x3f146a342b05a948"
+      "path": "doc/de/templates/readme-template.md",
+      "hash": "0x2bdad8449d2e5edb"
+    },
+    {
+      "path": "doc/en/guides/readme-dna-guide.md",
+      "hash": "0xd9a760652b1c79c3"
+    },
+    {
+      "path": "doc/en/guides/readme-guide.md",
+      "hash": "0x6072137d0750ab92"
+    },
+    {
+      "path": "doc/en/templates/readme-dna-template.md",
+      "hash": "0x8034923be2b0e7dc"
+    },
+    {
+      "path": "doc/en/templates/readme-template.md",
+      "hash": "0x2e1e4f2b9e962a83"
+    },
+    {
+      "path": "doc/fa/guides/readme-dna-guide.md",
+      "hash": "0x994e44fd14ebaf6b"
+    },
+    {
+      "path": "doc/fa/guides/readme-guide.md",
+      "hash": "0x93cc87264b4bbd74"
+    },
+    {
+      "path": "doc/fa/templates/readme-dna-template.md",
+      "hash": "0x704a59e2aa31777d"
+    },
+    {
+      "path": "doc/fa/templates/readme-template.md",
+      "hash": "0xd7df76f6481b3fda"
     },
     {
       "path": "scripts/check-readme.js",
-      "hash": "0x6c282b6b413208a4"
+      "hash": "0x2862d103b18297f4"
     }
   ]
 }

@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright (c) ggsuite
+Copyright (c) dnaCopyrightHolder
 
 Use of this source code is governed by terms that can be
 found in the LICENSE file in the root of this package.
@@ -12,25 +12,25 @@ English | [Deutsch](README.de.md)
 
 <!-- Keep the badges that apply, at most five. -->
 
-[![CI](https://github.com/ggdna/<package>/actions/workflows/quick_check.yaml/badge.svg)](https://github.com/ggdna/<package>/actions/workflows/quick_check.yaml)
+[![CI](dnaGitOrgUrl/<package>/actions/workflows/quick_check.yaml/badge.svg)](dnaGitOrgUrl/<package>/actions/workflows/quick_check.yaml)
 [![pub package](https://img.shields.io/pub/v/<package>.svg)](https://pub.dev/packages/<package>)
 [![npm](https://img.shields.io/npm/v/<package>.svg)](https://www.npmjs.com/package/<package>)
 
 <One or two sentences: what it does and for whom. The same text as the
 `description` in `pubspec.yaml` or `package.json`.>
 
-## Motivation
+## @motivation Motivation
 
 <Why this repo exists: the problem or friction that led to it and what it
 aims for. A short paragraph or 3–7 bullets.>
 
-## Installation
+## @installation Installation
 
 ```bash
 dart pub add <package>
 ```
 
-## Usage
+## @usage Usage
 
 <The most important feature, not all of them. The snippet runs unchanged
 and is the same code as `example/`.>
@@ -49,29 +49,29 @@ It prints:
 <What the example prints>
 ```
 
-## Limitations
+## @limitations Limitations
 
 <What the package deliberately does not do, and its known sharp edges.>
 
-## Documentation
+## @documentation Documentation
 
-<Links, not content: the guides in `doc/guides/`, the architecture docs,
+<Links, not content: the guides in `doc/en/guides/`, the architecture docs,
 the blog, the API reference.>
 
-## How it works
+## @how-it-works How it works
 
 <Optional, for non-trivial mechanics only.>
 
-## Status
+## @status Status
 
 <How mature it is, e.g. "Before 1.0 — the API may change between minor
 versions.">
 
-## Contributing
+## @contributing Contributing
 
-<Link the guides this repo has, e.g. `doc/guides/develop-guide.md`,
+<Link the guides this repo has, e.g. `doc/en/guides/develop-guide.md`,
 instead of repeating them.>
 
-## License
+## @license License
 
 <SPDX identifier, e.g. MIT> — see [LICENSE](LICENSE).
