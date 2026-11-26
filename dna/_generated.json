@@ -5,7 +5,7 @@
       "name": "base",
       "package": "helix",
       "ecosystem": null,
-      "resolvedVersion": "1.15.2",
+      "resolvedVersion": "1.16.0",
       "via": null,
       "hash": "0x6883da335b415f9d"
     },
@@ -15,15 +15,17 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x8742f5047e153ab2"
+      "hash": "0x4fa444d50d63a7a9"
     }
   ],
   "claude": {
     "claudeMdInclude": null,
-    "claudeMdFromDna": false
+    "claudeMdFromDna": false,
+    "blockHash": null
   },
-  "baseVersion": "1.15.2",
+  "baseVersion": "1.16.0",
   "baseHash": "0x6883da335b415f9d",
+  "configHash": "0x9981d39af3270962",
   "instances": [
     {
       "path": ".claude/skills/readme/SKILL.md",
@@ -31,7 +33,7 @@
     },
     {
       "path": ".pubignore",
-      "hash": "0x457ddc17fbcf8292"
+      "hash": "0xfd3d639a8e8ad148"
     },
     {
       "path": "doc/guides/readme-dna-guide.md",
