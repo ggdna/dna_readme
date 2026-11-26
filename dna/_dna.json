@@ -3,6 +3,10 @@
   // last layer of its own instantiation.
   "version": 2,
 
+  // Published as a DNA layer: helix requires a tag on every section of
+  // dna/ markdown, so the layers above can override each one.
+  "isLayer": true,
+
   // No parent DNA. This layer is orthogonal: it carries only its own topic
   // and is combined with dna_dart, dna-ts and other layers by the consumer.
   "layers": [],
