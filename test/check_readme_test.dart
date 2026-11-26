@@ -15,11 +15,10 @@ import 'package:test/test.dart';
 const _samples = 'test/sample_folder/check_readme';
 
 Future<(int, List<String>)> _check(String repoDir) async {
-  final result = await Process.run(
-    'node',
-    ['dna/scripts/check-readme.js', repoDir],
-    stdoutEncoding: utf8,
-  );
+  final result = await Process.run('node', [
+    'dna/scripts/check-readme.js',
+    repoDir,
+  ], stdoutEncoding: utf8);
   final lines = (result.stdout as String)
       .split('\n')
       .map((l) => l.trim())
@@ -31,7 +30,11 @@ Future<(int, List<String>)> _check(String repoDir) async {
 void main() {
   group('check-readme.js', () {
     group('passes', () {
-      for (final repo in ['$_samples/package_good', '$_samples/dna_good', '.']) {
+      for (final repo in [
+        '$_samples/package_good',
+        '$_samples/dna_good',
+        '.',
+      ]) {
         test(repo, () async {
           final (exitCode, lines) = await _check(repo);
           expect(lines, ['✓ README matches the guide']);
@@ -97,9 +100,8 @@ void main() {
     test('reports broken input instead of crashing', () async {
       final dir = await Directory.systemTemp.createTemp('check_readme_');
       addTearDown(() => dir.delete(recursive: true));
-      Directory('${dir.path}/dna/dot-claude/skills/c++').createSync(
-        recursive: true,
-      );
+      Directory('${dir.path}/dna/dot-claude/skills/c++')
+          .createSync(recursive: true);
       File('${dir.path}/dna/dot-claude/skills/c++/SKILL.md')
           .writeAsStringSync('# C++');
       File('${dir.path}/dna/_dna.json').writeAsStringSync('{ "layers": [');
@@ -127,10 +129,18 @@ void main() {
           ..writeAsBytesSync(f.readAsBytesSync());
       }
       // The key is assembled: the DNA would replace the plain name.
-      const key = 'dna' 'Languages';
-      File('${dir.path}/dna/_vars.json').writeAsStringSync(
-        jsonEncode({key: 'en,fa'}),
-      );
+      const key =
+          'dna'
+          'Languages';
+      void setLanguages(String languages) => File('${dir.path}/dna/_dna.json')
+          .writeAsStringSync(
+            jsonEncode({
+              'version': 1,
+              'layers': <String>[],
+              'vars': {key: languages},
+            }),
+          );
+      setLanguages('en,fa');
 
       final (exitCode, lines) = await _check(dir.path);
       expect(lines, [
@@ -139,9 +149,7 @@ void main() {
       ]);
       expect(exitCode, 1);
 
-      File('${dir.path}/dna/_vars.json').writeAsStringSync(
-        jsonEncode({key: 'en'}),
-      );
+      setLanguages('en');
       final (enOnly, enLines) = await _check(dir.path);
       expect(enLines, ['✓ README matches the guide']);
       expect(enOnly, 0);
