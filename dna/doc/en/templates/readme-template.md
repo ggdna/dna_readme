@@ -55,7 +55,7 @@ It prints:
 
 ## @documentation Documentation
 
-<Links, not content: the guides in `doc/guides/`, the architecture docs,
+<Links, not content: the guides in `doc/en/guides/`, the architecture docs,
 the blog, the API reference.>
 
 ## @how-it-works How it works
@@ -69,7 +69,7 @@ versions.">
 
 ## @contributing Contributing
 
-<Link the guides this repo has, e.g. `doc/guides/develop-guide.md`,
+<Link the guides this repo has, e.g. `doc/en/guides/develop-guide.md`,
 instead of repeating them.>
 
 ## @license License

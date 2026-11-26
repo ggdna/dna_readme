@@ -20,7 +20,7 @@ setup, the scope names the limits.
 
 ## @template Copy the template
 
-- Copy `doc/templates/readme-dna-template.md` to `README.md`, or revise
+- Copy `doc/en/templates/readme-dna-template.md` to `README.md`, or revise
   an existing README against it
 - Drop every section this layer has nothing for
 

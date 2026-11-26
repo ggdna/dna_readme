@@ -116,6 +116,37 @@ void main() {
       expect(exitCode, 1);
     });
 
+    test('checks the languages dnaLanguages lists', () async {
+      final dir = await Directory.systemTemp.createTemp('check_readme_');
+      addTearDown(() => dir.delete(recursive: true));
+      final good = Directory('$_samples/package_good');
+      for (final f in good.listSync(recursive: true).whereType<File>()) {
+        final rel = f.path.substring(good.path.length + 1);
+        File('${dir.path}/$rel')
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(f.readAsBytesSync());
+      }
+      // The key is assembled: the DNA would replace the plain name.
+      const key = 'dna' 'Languages';
+      File('${dir.path}/dna/_vars.json').writeAsStringSync(
+        jsonEncode({key: 'en,fa'}),
+      );
+
+      final (exitCode, lines) = await _check(dir.path);
+      expect(lines, [
+        '✗ README.md: the language switcher to README.fa.md is missing',
+        '✗ README.fa.md is missing',
+      ]);
+      expect(exitCode, 1);
+
+      File('${dir.path}/dna/_vars.json').writeAsStringSync(
+        jsonEncode({key: 'en'}),
+      );
+      final (enOnly, enLines) = await _check(dir.path);
+      expect(enLines, ['✓ README matches the guide']);
+      expect(enOnly, 0);
+    });
+
     test('reports a missing README', () async {
       final dir = await Directory.systemTemp.createTemp('check_readme_');
       addTearDown(() => dir.delete(recursive: true));
