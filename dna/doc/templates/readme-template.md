@@ -19,18 +19,18 @@ English | [Deutsch](README.de.md)
 <One or two sentences: what it does and for whom. The same text as the
 `description` in `pubspec.yaml` or `package.json`.>
 
-## Motivation
+## @motivation Motivation
 
 <Why this repo exists: the problem or friction that led to it and what it
 aims for. A short paragraph or 3–7 bullets.>
 
-## Installation
+## @installation Installation
 
 ```bash
 dart pub add <package>
 ```
 
-## Usage
+## @usage Usage
 
 <The most important feature, not all of them. The snippet runs unchanged
 and is the same code as `example/`.>
@@ -49,29 +49,29 @@ It prints:
 <What the example prints>
 ```
 
-## Limitations
+## @limitations Limitations
 
 <What the package deliberately does not do, and its known sharp edges.>
 
-## Documentation
+## @documentation Documentation
 
 <Links, not content: the guides in `doc/guides/`, the architecture docs,
 the blog, the API reference.>
 
-## How it works
+## @how-it-works How it works
 
 <Optional, for non-trivial mechanics only.>
 
-## Status
+## @status Status
 
 <How mature it is, e.g. "Before 1.0 — the API may change between minor
 versions.">
 
-## Contributing
+## @contributing Contributing
 
 <Link the guides this repo has, e.g. `doc/guides/develop-guide.md`,
 instead of repeating them.>
 
-## License
+## @license License
 
 <SPDX identifier, e.g. MIT> — see [LICENSE](LICENSE).
