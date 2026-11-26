@@ -1,6 +1,6 @@
 {
   "name": "@ggdna/dna-readme",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Gives a repo the rules, templates and a check to write a good README.",
   "keywords": [
     "dna",
