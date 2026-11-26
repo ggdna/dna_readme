@@ -15,7 +15,7 @@
       "ecosystem": null,
       "resolvedVersion": null,
       "via": null,
-      "hash": "0x3fa94fd2d9b184c9"
+      "hash": "0xfb507a8f6df4e668"
     }
   ],
   "claude": {
@@ -86,7 +86,7 @@
     },
     {
       "path": "scripts/check-readme.js",
-      "hash": "0x62567e6576ac8b2c"
+      "hash": "0x2862d103b18297f4"
     }
   ]
 }
