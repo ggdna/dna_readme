@@ -4,7 +4,7 @@ version: 0.5.0
 repository: https://github.com/ggdna/dna_readme.git
 
 environment:
-  sdk: ">=3.13.0 <4.0.0"
+  sdk: ">=3.14.0 <4.0.0"
 
 dev_dependencies:
   helix: ^1.18.0
